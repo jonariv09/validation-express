@@ -8,9 +8,9 @@ module.exports = function(passport) {
     done(null, user.id)
   })
 
-  passport.deserializeUser(async (user, done) => {
+  passport.deserializeUser((id, done) => {
     try {
-      const user = await User.findById(user.id)
+      const user = User.findById(id)
       done(null, user)
     } catch(error) {
       done(error, null)
