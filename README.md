@@ -1,3 +1,11 @@
+Para ejecutar el proyecto se necesita un archivo *.env* con las siguientes variables 
+
+- DB_PASS
+- DB_USER
+- DB_URI
+
+
+
 **setting object for cookie**
 { path: '/', httpOnly: true, secure: false, maxAge: null }
 
