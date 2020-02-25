@@ -13,6 +13,7 @@ const hbs = require('express-handlebars')
 const mongoose = require('mongoose')
 const MongoStore = require('connect-mongo')(expressSession)
 require('./config/passport')(passport)
+require('./config/facebook-passport')(passport)
 
 const {
   DB_PASS,
@@ -63,7 +64,6 @@ app.use(function (req, res, next) {
 // error handler
 app.use(function (err, req, res, next) {
   // set locals, only providing error in development
-  console.log('entra aqui')
 
   res.locals.message = err.message
   res.locals.error = req.app.get('env') === 'development' ? err : { }

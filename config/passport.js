@@ -16,36 +16,19 @@ module.exports = function (passport) {
     }
   })
 
-  passport.use('local-login', new LocalStrategy({
-    usernameField: 'email',
-    passwordField: 'password',
-    passReqToCallback: true
-  },
-  (req, email, password, done) => {
-    process.nextTick(() => {
-      User.findOne({ 'local.username': email }, (err, user) => {
-        if (err) return done(err)
-        if (!user) return done(err, false, req.flash('signupMessage', 'error'))
-        if (user.local.password != password) { return done(null, false, req.flash('signupMessage', 'error')) }
-
-        return done(null, user)
-      })
-    })
-  }))
-
   passport.use('local-signup', new LocalStrategy({
     usernameField: 'email',
     passwordField: 'password',
     passReqToCallback: true
   },
-  (req, email, password, done) => {
+  function(req, email, password, done) {
     process.nextTick(() => {
       User.findOne({ 'local.username': email }, (err, user) => {
         if (err) { return done(err) }
         if (user) { return done(null, false, req.flash('signupMessage', 'error')) } else {
           const newUser = new User()
           newUser.local.username = email
-          newUser.local.password = password
+          newUser.local.password = newUser.generateHash(password)
 
           newUser.save((err) => {
             if (err) { throw (err) }
@@ -55,4 +38,23 @@ module.exports = function (passport) {
       })
     })
   }))
+
+  passport.use('local-login', new LocalStrategy({
+    usernameField: 'email',
+    passwordField: 'password',
+    passReqToCallback: true
+  },
+  function(req, email, password, done) {
+    process.nextTick(() => {
+      User.findOne({ 'local.username': email }, (err, user) => {
+        console.log(password);
+        if (err) return done(err)
+        if (!user) return done(err, false, req.flash('signupMessage', 'error'))
+        if (!user.validPassword(password)) { return done(null, false, req.flash('signupMessage', 'error')) }
+        
+        return done(null, user)
+      })
+    })
+  }))
+  
 }

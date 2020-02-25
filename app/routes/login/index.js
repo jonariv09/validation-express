@@ -2,7 +2,6 @@
 
 module.exports = (passport) => {
   const router = require('express').Router()
-  const User = require('../../models/User')
 
   router.get('/', function name (req, res) {
     res.render('session', { message: req.flash('signupMessage') })
@@ -28,7 +27,7 @@ module.exports = (passport) => {
     failureFlash: true
   }))
 
-  const isLoggedIn = (req, res, next) => {
+  function isLoggedIn (req, res, next) {
     if (req.isAuthenticated()) { return next() }
     res.redirect('/login')
   }
