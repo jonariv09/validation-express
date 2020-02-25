@@ -1,37 +1,40 @@
 
-
 module.exports = (passport) => {
-  
   const router = require('express').Router()
   const User = require('../../models/User')
 
-  router.get('/', function name(req, res, params) {
-    res.render('login', { message: req.flash('signupMessage') })
+  router.get('/', function name (req, res) {
+    res.render('session', { message: req.flash('signupMessage') })
   })
-  
+
+  router.get('/signup', (req, res, next) => {
+    res.render('signup', { message: req.flash('singupMessage') })
+  })
+
   router.post('/signup', passport.authenticate('local-signup', {
-    successRedirect: '/login',
-    failureRedirect: '/login',
+    successRedirect: '/session/profile',
+    failureRedirect: '/session/signup',
     failureFlash: true
   }))
 
-  router.post('/createUser', function (req, res, next) {
-    const newUser = new User({
-      username: req.params.username,
-      password: req.params.password
-    })
+  router.get('/login', (req, res, next) => {
+    res.render('login', { message: req.flash('signupMessage') })
+  })
 
-    newUser
-      .save()
-      .then(data => {
-        res.status(200).json()
-        userCreated: newUser
-      })
-      .catch(err => {
-        res.status(500).json({ error: err })
-      })
+  router.post('/login', passport.authenticate('local-login', {
+    successRedirect: '/session/profile',
+    failureRedirect: '/session/login',
+    failureFlash: true
+  }))
+
+  const isLoggedIn = (req, res, next) => {
+    if (req.isAuthenticated()) { return next() }
+    res.redirect('/login')
+  }
+
+  router.get('/profile', isLoggedIn, (req, res) => {
+    res.render('profile', { user: req.user })
   })
 
   return router
 }
-
