@@ -21,40 +21,54 @@ module.exports = function (passport) {
     passwordField: 'password',
     passReqToCallback: true
   },
-  function(req, email, password, done) {
-    process.nextTick(() => {
-      User.findOne({ 'local.username': email }, (err, user) => {
-        if (err) { return done(err) }
-        if (user) { return done(null, false, req.flash('signupMessage', 'error')) } else {
-          const newUser = new User()
-          newUser.local.username = email
-          newUser.local.password = newUser.generateHash(password)
+    function (req, email, password, done) {
+      process.nextTick(() => {
 
-          newUser.save((err) => {
-            if (err) { throw (err) }
-            return done(null, newUser, req.flash('signupMessage', 'success'))
-          })
-        }
+
+        User.findOne({ 'local.username': email }, (err, user) => {
+          if (err) { return done(err) }
+          if (user) {
+            return done(null, false, req.flash('signupMessage', 'error'))
+          } 
+          
+          if(!req.user) {
+            const newUser = new User()
+            newUser.local.username = email
+            newUser.local.password = newUser.generateHash(password)
+            
+            newUser.save((err) => {
+              if (err) { throw (err) }
+              return done(null, newUser, req.flash('signupMessage', 'success'))
+            })
+          } else {
+            const newUser = req.user
+            newUser.local.username = email
+            newUser.local.password = newUser.generateHash(password)
+            
+            newUser.save((err) => {
+              if(err) throw err
+              return done(null, newUser, req.flash('signupMessage', 'success'))
+            })
+          }
+        })
       })
-    })
-  }))
-
+    }))
+  
   passport.use('local-login', new LocalStrategy({
     usernameField: 'email',
     passwordField: 'password',
     passReqToCallback: true
   },
-  function(req, email, password, done) {
-    process.nextTick(() => {
-      User.findOne({ 'local.username': email }, (err, user) => {
-        console.log(password);
-        if (err) return done(err)
-        if (!user) return done(err, false, req.flash('signupMessage', 'error'))
-        if (!user.validPassword(password)) { return done(null, false, req.flash('signupMessage', 'error')) }
-        
-        return done(null, user)
+    function (req, email, password, done) {
+      process.nextTick(() => {
+        User.findOne({ 'local.username': email }, (err, user) => {
+          if (err) return done(err)
+          if (!user) return done(err, false, req.flash('signupMessage', 'error'))
+          if (!user.validPassword(password)) { return done(null, false, req.flash('signupMessage', 'error')) }
+
+          return done(null, user)
+        })
       })
-    })
-  }))
-  
+    }))
+
 }

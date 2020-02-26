@@ -8,9 +8,9 @@
   <p> <b> email: </b> <%= user.local.username %> </p>
   <p> <b> password: </b> <%= user.local.password %> </p>
 
-  <a href="/logout"> Logout </a>
+  <a href="/unlink/local"> Logout </a>
   <% } else { %>
-  <a href="/session/login"> Login </a>
+  <a href="/connect/local"> Login </a>
   <% } %>
 </div>
 
@@ -24,16 +24,13 @@
   <p> <b> token: </b> <%= user.facebook.token%> </p>
   <p> <b> email: </b> <%= user.facebook.email%> </p>
   <p> <b> name: </b> <%= user.facebook.name %> </p>
-  <a href="/logout"> Logout </a>
+  <a href="/unlink/facebook"> Logout </a>
   <% } else { %>
-  <a href="/auth/facebook"> Login </a>
+  <a href="/connect/facebook"> Login </a>
   <% } %>
 
 
 </div>
-
-
-
 
 
 <div>
@@ -45,8 +42,8 @@
   <p> <b> token: </b> <%= user.google.token%> </p>
   <p> <b> email: </b> <%= user.google.email%> </p>
   <p> <b> name: </b> <%= user.google.name %> </p>
-  <a href="/logout"> Logout </a>
+  <a href="/unlink/google"> Logout </a>
   <% } else { %>
-  <a href="/auth/google"> Login </a>
+  <a href="/connect/google"> Login </a>
   <% } %>
 </div>

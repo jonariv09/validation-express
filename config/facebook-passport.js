@@ -12,27 +12,47 @@ module.exports = (passport) => {
     clientID: FACEBOOK_APP_ID,
     clientSecret: FACEBOOK_APP_SECRET,
     callbackURL: "http://localhost:3000/auth/facebook/callback",
-    profileFields   : ['emails', 'displayName', 'name', 'photos', 'gender', 'profileUrl']
+    profileFields   : ['emails', 'displayName', 'name', 'photos', 'gender', 'profileUrl'],
+    passReqToCallback: true
   },
-  function (accessToken, refreshToken, profile, done) {
+  function (req, accessToken, refreshToken, profile, done) {
     process.nextTick(() => {
-      User.findOne({ "facebook.id": profile.id }, (err, user) => {
-        if(err) return done(err)
-        if(user)
+      if(!req.user) {
+
+        User.findOne({ "facebook.id": profile.id }, (err, user) => {
+          if(err) return done(err)
+          if(user)
+            return done(null, user)
+          else {
+            const newUser = new User({
+              'facebook.id': profile.id,
+              'facebook.token': accessToken,
+              'facebook.name': profile.displayName,
+              'facebook.email': profile.emails[0].value
+            })
+            
+            
+            newUser.save( function(err) {
+              if(err) throw err;
+              return done(null, newUser)
+            })
+          }
+        })
+      } else {
+
+        const user = req.user
+        user.facebook.id = profile.id
+        user.facebook.token = accessToken
+        user.facebook.name = profile.displayName
+        user.facebook.email = profile.emails[0].value
+        
+        user.save(function(err) {
+          if(err)
+            throw err
           return done(null, user)
-        else {
-          const newUser = new User()
-          newUser.facebook.id = profile.id
-          newUser.facebook.token = accessToken
-          newUser.facebook.name = profile.name.givenName + ' ' + profile.name.familyName
-          newUser.facebook.email = profile.emails[0].value
-          
-          newUser.save( function(err) {
-            if(err) throw err;
-            return done(null, newUser)
-          })
-        }
-      })
+        })
+
+      }
     })
   }
   ));
