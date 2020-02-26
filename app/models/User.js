@@ -1,8 +1,6 @@
 const mongoose = require('mongoose')
 const bcrypt = require('bcrypt')
 
-
-
 const userSchema = new mongoose.Schema({
   local: {
     username: String,
@@ -13,10 +11,14 @@ const userSchema = new mongoose.Schema({
     token: String,
     email: String,
     name: String
+  },
+  google: {
+    id: String,
+    token: String,
+    email: String,
+    name: String
   }
 })
-
-
 
 userSchema.methods.generateHash = function(password) {
   return bcrypt.hashSync(password, bcrypt.genSaltSync(9))
@@ -27,4 +29,3 @@ userSchema.methods.validPassword = function(password) {
 }
 
 module.exports = mongoose.model('User', userSchema)
-

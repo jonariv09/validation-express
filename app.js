@@ -14,6 +14,7 @@ const mongoose = require('mongoose')
 const MongoStore = require('connect-mongo')(expressSession)
 require('./config/passport')(passport)
 require('./config/facebook-passport')(passport)
+require('./config/google-passport')(passport)
 
 const {
   DB_PASS,

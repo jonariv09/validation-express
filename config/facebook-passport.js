@@ -31,20 +31,9 @@ module.exports = (passport) => {
             if(err) throw err;
             return done(null, newUser)
           })
-          
-          console.log(profile)
-
         }
       })
     })
   }
   ));
 }
-
-
-// function (accessToken, refreshToken, profile, done) {
-//   User.findOrCreate(..., function (err, user) {
-//     if (err) { return done(err); }
-//     done(null, user);
-//   });
-// }
