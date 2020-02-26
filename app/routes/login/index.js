@@ -20,7 +20,7 @@ module.exports = (passport) => {
   router.get('/login', (req, res, next) => {
     res.render('login', { message: req.flash('signupMessage') })
   })
-
+  
   router.post('/login', passport.authenticate('local-login', {
     successRedirect: '/session/profile',
     failureRedirect: '/session/login',

@@ -28,9 +28,6 @@ mongoose.connect(`mongodb+srv://${DB_USER}:${DB_PASS}@${DB_URI}`,
     dbName: 'ValidationExpress'
   })
 
-// incluir el archivo route/index
-const users = require('./app/routes/users')
-
 // view engine setup
 app.set('view engine', 'ejs')
 
@@ -54,7 +51,6 @@ app.use(flash())
 
 // routes includes
 require('./app/routes/index')(app, passport)
-// app.use('/users', users)
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
