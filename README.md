@@ -21,23 +21,14 @@ Para ejecutar el proyecto se necesita un archivo *.env* con las siguientes varia
 
 **Main properties**
 
- [ ] genid 
-
- [ ] name
-
- [ ] proxy
-
- [ ] proxy
-
- [ ] resave
-
- [ ] rolling
-
- [ ] saveUninitialized
-
- [ ] secret
-
- [ ] store
-
- [ ] unset
+- [ ] genid 
+- [ ] name
+- [ ] proxy
+- [ ] proxy
+- [ ] resave
+- [ ] rolling
+- [ ] saveUninitialized
+- [ ] secret
+- [ ] store
+- [ ] unset
 
